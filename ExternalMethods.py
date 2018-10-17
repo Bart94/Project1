@@ -1,26 +1,34 @@
+from CircularPositionalList import CircularPositionalList
+
+
 class ExternalMethods():
 
-    def bubblesorted(self):
-        temp = self.copy()
-        if not self.is_sorted():
-            current_node = temp._header._next
-            counter = 0
+    def bubblesorted(cplist):
+        temp = cplist.copy()
 
-            if len(self) > 1:
-                while counter < (len(temp) - 1):
+        if not cplist.is_sorted():
+            current_node = temp._header._next
+
+            if len(cplist) > 1:
+                for i in range(len(temp) - 1):
                     next_node = current_node._next
-                    for j in range(counter, len(temp) - 1):
-                        if (current_node._element is not None and next_node._element is not None) and current_node._element > next_node._element:
-                            current_node._element, next_node._element = next_node._element, current_node._element
+                    for j in range(i, len(temp) - 1):
+                        if current_node._element is not None or next_node._element is not None:
+                            if current_node._element > next_node._element:
+                                current_node._element, next_node._element = next_node._element, current_node._element
                         next_node = next_node._next
                     current_node = current_node._next
-                    counter += 1
-        return temp
 
-    def merge(self, other):
-        if type(self) == type(other):
-            if self.is_sorted() and other.is_sorted():
-                copy_self = self.copy()
-                copy_other = other.copy()
+        for elem in temp:
+            yield elem
+
+    def merge(cplist_one, cplist_two):
+        ret_list = CircularPositionalList()
+        if type(cplist_one) == type(cplist_two):
+            if cplist_one.is_sorted() and cplist_two.is_sorted():
+                copy_self = cplist_one.copy()
+                copy_other = cplist_two.copy()
                 copy_self += copy_other
-                return copy_self.bubblesorted()
+                for elem in ExternalMethods.bubblesorted(copy_self):
+                    ret_list.append(elem)
+        return ret_list

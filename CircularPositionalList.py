@@ -1,5 +1,6 @@
 from TdP_collections.TdP_collections.list.positional_list import PositionalList
 
+
 class CircularPositionalList(PositionalList):
 
     def __init__(self, l=None):
@@ -15,14 +16,17 @@ class CircularPositionalList(PositionalList):
             self._trailer._prev = l._trailer._prev
             self._size = l._size
 
-    # restituisce l'elemento nella Position precedente a p, None se p non ha un predecessore e ValueError
-    # se p non è una position della lista
-
     def before(self, p):
-        return super().before(p).element()
+        if len(self) == 1:
+            return None
+        else:
+            return super().before(p).element()
 
     def after(self, p):
-        return super().after(p).element()
+        if len(self) == 1:
+            return None
+        else:
+            return super().after(p).element()
 
     def add_before(self, p, e):
         """Insert element e into list before Position p and return new Position."""
@@ -78,7 +82,6 @@ class CircularPositionalList(PositionalList):
 
     def _insert_between(self, e, predecessor, successor):
         """Add element e between two existing nodes and return new node."""
-        """ Sovrascrivo il vecchio _insert_between """
         if predecessor is self._header and successor is self._trailer:  # Il primo inserimento in una lista vuota
             newest = self._Node(e, None, None)  # linked to neighbors
             newest._next = newest._prev = newest
@@ -146,15 +149,25 @@ class CircularPositionalList(PositionalList):
         self.replace(pos, value)
 
     def __iadd__(self, other):
-        self._trailer._prev._next = other._header._next  # Nel next dell'ultimo elemento(self._trailer._prev) mettici il primo dell'altra lista(other._header._next)
-        other._header._next._prev = self._trailer._prev._next
-        self._trailer._prev = other._trailer._prev
+        self._trailer._prev._next = other._header._next
+        other._header._next._prev = self._trailer._prev
 
-        self._header._next._prev = self._trailer._prev
-        self._trailer._prev._next = self._header._next
+        other._trailer._prev._next = self._header._next
+        self._header._next._prev = other._trailer._prev
+
+        self._trailer._prev = other._trailer._prev
 
         self._size = self._size + other._size
         return self
+        # self._trailer._prev._next = other._header._next  # Nel next dell'ultimo elemento(self._trailer._prev) mettici il primo dell'altra lista(other._header._next)
+        # other._header._next._prev = self._trailer._prev._next
+        # self._trailer._prev = other._trailer._prev
+        #
+        # self._header._next._prev = self._trailer._prev
+        # self._trailer._prev._next = self._header._next
+        #
+        # self._size = self._size + other._size
+        # return self
 
     def __add__(self, other):
         l = CircularPositionalList(self)
@@ -178,11 +191,15 @@ class CircularPositionalList(PositionalList):
         successor = current._next
         if len(self) > 1:
             for i in range(len(self) - 1):
-                if (current._element is not None and successor._element is not None) and current._element <= successor._element:  # Se il puntatore che scorre in avanti è uguale all'elemento
+                if current._element is not None or successor._element is not None:
+                    if current._element <= successor._element:
+                        current = current._next
+                        successor = current._next
+                    else:
+                        return False
+                else:
                     current = current._next
                     successor = current._next
-                else:
-                    return False
             return True
         else:
             return True
@@ -193,18 +210,6 @@ class CircularPositionalList(PositionalList):
             curr._next, curr._prev = curr._prev, curr._next
             curr = curr._next
         self._header._next, self._trailer._prev = self._trailer._prev, self._header._next
-
-    # def reverse(self):
-    #     first = self._header._next
-    #     last = self._trailer._prev
-    #     if (len(self) > 1):
-    #         counter = 0
-    #         while counter < int(len(self) / 2):
-    #             first._element, last._element = last._element, first._element
-    #
-    #             first = first._next
-    #             last = last._prev
-    #             counter += 1
 
     def header(self):
         return self._header
@@ -224,8 +229,7 @@ class CircularPositionalList(PositionalList):
             node = node._next
 
     def print_element(self):
-        generator = self.__iter__()
-        for elem in generator:
+        for elem in self:
             print(elem)
 
     def copy(self):
