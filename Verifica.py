@@ -21,6 +21,11 @@ l2 = CircularPositionalList()
 for i in ExternalMethods.bubblesorted(l1):
     l2.append(i)
 
+pos = l2.find("Gambadilegno")
+del l2[pos]
+
+print(l2)
+
 scoreboard = ScoreBoard()
 new_score = scoreboard.Score("Minni", 1498, "21 Gennaio 2018")
 scoreboard.insert(new_score)
@@ -39,17 +44,6 @@ scoreboard.insert(new_score)
 new_score = scoreboard.Score("Clarabella", 9642, "27 Marzo 2018")
 scoreboard.insert(new_score)
 
-
-# l2 = CircularPositionalList()
-#
-# for j in ExternalMethods.bubblesorted(scoreboard._sb):
-#     l2.append(j)
-#
-# print(l2)
-
-
-# print(scoreboard.top(1))
-
 scoreboard1 = ScoreBoard()
 new_score = scoreboard1.Score("Gambadilegno", 56855, "27 Marzo 2018")
 scoreboard1.insert(new_score)
@@ -62,7 +56,7 @@ scoreboard1.insert(new_score)
 
 # print(scoreboard1._sb)
 
-# print("Merge {}".format(scoreboard.merge(scoreboard1)))
+scoreboard.merge(scoreboard1)
 
 
 

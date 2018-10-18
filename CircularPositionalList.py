@@ -4,17 +4,26 @@ from TdP_collections.TdP_collections.list.positional_list import PositionalList
 class CircularPositionalList(PositionalList):
 
     def __init__(self, l=None):
-        self._header = self._Node(None, None, None)
-        self._trailer = self._Node(None, None, None)
+        super().__init__()
         self._header._prev = self._trailer
-        self._header._next = self._trailer  # trailer is after header
-        self._trailer._prev = self._header  # header is before trailer
         self._trailer._next = self.header()
-        self._size = 0  # number of elements
         if l is not None:
             self._header._next = l._header._next
             self._trailer._prev = l._trailer._prev
             self._size = l._size
+
+    # def __init__(self, l=None):
+    #     self._header = self._Node(None, None, None)
+    #     self._trailer = self._Node(None, None, None)
+    #     self._header._prev = self._trailer
+    #     self._header._next = self._trailer  # trailer is after header
+    #     self._trailer._prev = self._header  # header is before trailer
+    #     self._trailer._next = self.header()
+    #     self._size = 0  # number of elements
+    #     if l is not None:
+    #         self._header._next = l._header._next
+    #         self._trailer._prev = l._trailer._prev
+    #         self._size = l._size
 
     def before(self, p):
         if len(self) == 1:

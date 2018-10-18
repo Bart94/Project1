@@ -10,7 +10,7 @@ class ScoreBoard:
             self._data = data
 
         def __eq__(self, other):
-            return True if self._score == other._score else False
+            return True if self._score == other._score and self._player == other._player else False
 
         def __le__(self, other):
             if other is None:
@@ -133,7 +133,7 @@ class ScoreBoard:
                 l.append(top._element)
                 top = top._prev
                 j += 1
-            return l
+            print(l)
 
     def last(self, i=1):
         """Restituisce i migliori i risultati"""
@@ -155,7 +155,7 @@ class ScoreBoard:
                 l.append(top._element)
                 top = top._next
                 j += 1
-            return l
+            print(l)
 
 def print_scoreboard(self):
     self._sb.print_element()

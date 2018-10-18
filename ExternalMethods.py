@@ -31,4 +31,7 @@ class ExternalMethods():
                 copy_self += copy_other
                 for elem in ExternalMethods.bubblesorted(copy_self):
                     ret_list.append(elem)
+            else:
+                raise Exception("Each list must be sorted!")
+
         return ret_list
