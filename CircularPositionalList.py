@@ -98,7 +98,7 @@ class CircularPositionalList(PositionalList):
             successor._prev = newest
             self._size += 1
             return self._make_position(newest)
-        if predecessor is self._header:  # Inserimento in testa
+        elif predecessor is self._header:  # Inserimento in testa
             new_prec = self._trailer._prev
             newest = self._Node(e, new_prec, successor)  # Collego il nodo alla vecchia testa e alla coda
             successor._prev = newest
@@ -106,8 +106,7 @@ class CircularPositionalList(PositionalList):
             new_prec._next = newest  # Collego il next della coda al nuovo elemento in testa
             self._size += 1
             return self._make_position(newest)
-
-        if successor is self._trailer:
+        elif successor is self._trailer:
             new_succ = self._header._next
             newest = self._Node(e, predecessor, new_succ)  # Collego il nodo al predecessore e al nodo in testa
             predecessor._next = newest
@@ -168,15 +167,6 @@ class CircularPositionalList(PositionalList):
 
         self._size = self._size + other._size
         return self
-        # self._trailer._prev._next = other._header._next  # Nel next dell'ultimo elemento(self._trailer._prev) mettici il primo dell'altra lista(other._header._next)
-        # other._header._next._prev = self._trailer._prev._next
-        # self._trailer._prev = other._trailer._prev
-        #
-        # self._header._next._prev = self._trailer._prev
-        # self._trailer._prev._next = self._header._next
-        #
-        # self._size = self._size + other._size
-        # return self
 
     def __add__(self, other):
         l = CircularPositionalList(self)

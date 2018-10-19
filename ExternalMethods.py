@@ -3,6 +3,7 @@ from CircularPositionalList import CircularPositionalList
 
 class ExternalMethods():
 
+    #Caso peggiore O(n)
     def bubblesorted(cplist):
         temp = cplist.copy()
 
@@ -22,6 +23,7 @@ class ExternalMethods():
         for elem in temp:
             yield elem
 
+    #Caso peggiore O(n)
     def merge(cplist_one, cplist_two):
         ret_list = CircularPositionalList()
         if type(cplist_one) == type(cplist_two):

@@ -58,18 +58,50 @@ class ScoreBoard:
     def is_empty(self):
         return True if self.size() == 0 else False
 
+    #Caso peggiore O(n)
+    def insert(self, s):
+        if self.size() == 0:
+            self._sb.add_first(s)
+            self._sb.delete(self._sb.last())
+        else:
+            min = self._get_min()
+            if s > self._sb._header._next._element:
+                self._sb.delete(self._sb.last())
+                self._sb.add_first(s)
+            elif s < min._element:
+                self._insert_in_order(min, s)
+            else:
+                current_node = self._sb._header._next
+                for i in range(self.size() - 1):
+                    next_node = current_node._next
+                    if current_node._element > s > next_node._element:
+                        self._insert_in_order(current_node, s)
+                        break
+                    current_node = current_node._next
+
+    def _insert_in_order(self, node_one, score):
+        self._sb.delete(self._sb.last())
+        self._sb.add_after(self._sb.find(node_one._element), score)
+
+
     # Inserisce un nuovo score se e solo se non è peggiore dei risultati già presenti e se
     # la struttura non è piena
-    def insert(self, s):
-        if self.size() < len(self._sb):
-            self._sb.delete(self._sb.last())
-            self._sb.add_first(s)
-        else:
-            min_score = self.getMin()._element
-            if min_score is not None and s > min_score:
-                self._sb.replace(self._sb.find(min_score), s)
+    # def insert(self, s):
+    #     if self.size() < len(self._sb):
+    #         self._sb.delete(self._sb.last())
+    #         self._sb.add_first(s)
+    #     else:
+    #         min_score = self._get_min()._element
+    #         if min_score is not None and s > min_score:
+    #             self._sb.replace(self._sb.find(min_score), s)
+    #
+    #     if self.size() > 1:
+    #         for elem in ExternalMethods.bubblesorted(self._sb):
+    #             self._sb.add_first(elem)
+    #             self._sb.delete(self._sb.last())
 
-    def _getMin(self):
+    #Caso peggiore O(n)
+    def _get_min(self):
         current_node = self._sb._header._next
         min = current_node
         if self.size() > 1:
@@ -82,24 +114,11 @@ class ScoreBoard:
                 current_node = current_node._next
         return min
 
-    def _getMax(self):
-        current_node = self._sb._header._next
-        max = current_node
-        if self.size() > 1:
-            for i in range(len(self)):
-                if current_node._element is not None:
-                    if max._element is None:
-                        max = current_node
-                    elif current_node._element > max._element:
-                        max = current_node
-                current_node = current_node._next
-        return max
-
     def merge(self, new):
         if type(self) == type(new):
             self_copy = CircularPositionalList()
             new_copy = CircularPositionalList()
-            lenght = len(self)
+            length = len(self)
             for elem_self in ExternalMethods.bubblesorted(self._sb):
                 self_copy.append(elem_self)
 
@@ -107,55 +126,36 @@ class ScoreBoard:
                 new_copy.append(elem_new)
 
             self._sb = ExternalMethods.merge(self_copy, new_copy)
-            if self.size() > 10:
-                return self.top(10)
-            else:
-                return self.top(lenght)
+
+            if len(self) > length and len(self) > 10:
+                for i in range(len(self) - length):
+                    self._sb.delete(self._sb.first())
+
+            self._sb.reverse()
+
 
     def top(self, i=1):
-        """Restituisce i migliori i risultati"""
-        temp = CircularPositionalList()
-        for elem_new in ExternalMethods.bubblesorted(self._sb):
-            temp.append(elem_new)
-
-        self._sb = temp
-
         if i > self.size():
-            raise IndexError("IndexError: no such value with this index")
-
-        if i == 1:
-            return self._getMax()._element
+            raise IndexError("Error: not enough values")
+        elif i == 1:
+            print(self._sb.first().element())
         else:
-            top = self._getMax()
-            j = 0
-            l = CircularPositionalList()
-            while j < i:
-                l.append(top._element)
-                top = top._prev
-                j += 1
-            print(l)
+            top = self._sb.first()._node
+            for j in range(i):
+                print(top._element)
+                top = top._next
 
     def last(self, i=1):
-        """Restituisce i migliori i risultati"""
-        temp = CircularPositionalList()
-        for elem_new in ExternalMethods.bubblesorted(self._sb):
-            temp.append(elem_new)
-
-        self._sb = temp
-
         if i > self.size():
             raise IndexError("IndexError: no such value with this index")
-        if i == 1:
-            return self._getMin()._element
+        elif i == 1:
+            print(self._get_min()._element)
         else:
-            top = self._getMin()
-            j = 0
-            l = CircularPositionalList()
-            while j < i:
-                l.append(top._element)
-                top = top._next
-                j += 1
-            print(l)
+            top = self._get_min()
+            for j in range(i):
+                print(top._element)
+                top = top._prev
+
 
 def print_scoreboard(self):
     self._sb.print_element()
