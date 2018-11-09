@@ -14,7 +14,6 @@ def bubblesorted(cplist):
                     if current_node._element > next_node._element:
                         current_node._element, next_node._element = next_node._element, current_node._element
                 next_node = next_node._next
-            current_node._element
             current_node = current_node._next
 
     for elem in temp:
